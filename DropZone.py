@@ -67,33 +67,33 @@ class LoadDLL:
             ctypes.byref(self.is_over), 
             ctypes.byref(self.is_dropped))
     def __check_state(self):
-        if self.state_active==True:
 
-            if self.is_over.value==True:
-                if self.is_entered.value==True:         #ENTERED
-                    self.is_entered.value = False
-                    if self.on_entered!=None:
-                        self.on_entered("None") 
-
-
-                if self.is_leaved.value:                #LEAVED
-                    self.is_leaved.value = False
-                    if self.on_leaved!=None:
-                        self.on_leaved("None")
+        if self.is_over.value==True:
+            if self.is_entered.value==True:         #ENTERED
+                self.is_entered.value = False
+                if self.on_entered!=None:
+                    self.on_entered("None") 
 
 
-                if self.is_dropped.value:               #DROPPED
-                    self.is_dropped.value = False
-                    if self.on_dropped!=None:
-                        paths = self.__get_file_names()
-                        self.on_dropped(paths)
+            if self.is_leaved.value:                #LEAVED
+                self.is_leaved.value = False
+                if self.on_leaved!=None:
+                    self.on_leaved("None")
+
+
+            if self.is_dropped.value:               #DROPPED
+                self.is_dropped.value = False
+                if self.on_dropped!=None:
+                    paths = self.__get_file_names()
+                    self.on_dropped(paths)
 
             
 
     async def __execute(self):
         try:
             while self.__window_exists():
-                self.__check_state()
+                if self.state_active:
+                    self.__check_state()
                 await asyncio.sleep(0.01)
         except Exception as e:
             print(f"Error occured: {e}")
